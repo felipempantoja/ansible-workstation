@@ -1,0 +1,14 @@
+---
+- name: Verify
+  hosts: all
+  vars_files:
+    - '../../defaults/main.yml'
+  tasks:
+    - name: Gather package facts
+      package_facts:
+        manager: auto
+
+    - name: Verify Cross Installed Packages
+      assert:
+        that: "'{{ item }}' in ansible_facts.packages"
+      loop: '{{ packages_cross }}'

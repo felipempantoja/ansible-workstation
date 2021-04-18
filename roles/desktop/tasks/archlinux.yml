@@ -1,0 +1,7 @@
+---
+# ref: https://github.com/archkiss/Arch-Linux-Tips-And-Tricks
+- name: Apply Archlinux Customizations in pacman.conf file
+  shell: "sed -i 's/{{ item }}/g' /etc/pacman.conf"
+  with_items: ['#Color/Color', 'VerbosePkgLists/VerbosePkgLists\nILoveCandy']
+  become: yes
+  changed_when: false

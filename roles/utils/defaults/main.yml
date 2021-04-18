@@ -27,6 +27,7 @@ packages_cross:
 
 packages_Archlinux:
   - exa
+  - irpf
   - lm_sensors
 
 packages_Ubuntu:

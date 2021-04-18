@@ -1,38 +1,33 @@
 ---
 - name: Install Oh My Zsh
-  script: ../files/install-oh-my-zsh.sh {{ user_name }}
+  script: ../scripts/install-oh-my-zsh.sh {{ username }}
   register: install_result
   changed_when: install_result.rc == 0
   failed_when: install_result.rc != 0 and install_result.rc != 255
-  tags:
-    - zsh
 
 - name: Install Powerlevel10k Theme
   git:
     repo: 'https://github.com/romkatv/powerlevel10k.git'
-    dest: '/home/{{ user_name }}/powerlevel10k'
+    dest: '{{ home_dir }}/powerlevel10k'
     depth: '1'
-  tags: zsh
 
 - name: Install Oh My Zsh Plugins
   git:
     repo: '{{ item }}'
-    dest: '/home/{{ user_name }}/.oh-my-zsh/custom/plugins/{{ item.split("/") | last }}'
-  with_items: '{{ desktop_omyzsh_plugins }}'
+    dest: '{{ home_dir }}/.oh-my-zsh/custom/plugins/{{ item.split("/") | last }}'
+  with_items: '{{ ohmyzsh_plugins }}'
   ignore_errors: yes
-  tags: zsh
 
 - name: Set Oh My Zsh Plugins Permissions
   file:
-    path: '/home/{{ user_name }}/.oh-my-zsh/custom/plugins'
+    path: '{{ home_dir }}/.oh-my-zsh/custom/plugins'
     state: directory
     recurse: yes
     mode: '700'
+  changed_when: false
 
 - name: Set Zsh as default shell
   user:
-    name: '{{ user_name }}'
+    name: '{{ username }}'
     shell: /usr/bin/zsh
   become: true
-  tags:
-    - zsh

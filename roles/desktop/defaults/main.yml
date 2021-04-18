@@ -1,0 +1,14 @@
+---
+packages_cross:
+  - ranger
+  - tmux
+  - zsh
+
+ohmyzsh_plugins:
+  - https://github.com/zsh-users/zsh-autosuggestions
+  - https://github.com/zsh-users/zsh-syntax-highlighting
+  - https://github.com/djui/alias-tips
+
+tmux_plugins:
+  - tmux-resurrect
+  - tmux-sensible

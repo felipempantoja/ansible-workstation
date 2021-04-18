@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: 'Include desktop'
+      include_role:
+        name: 'desktop'
+      vars:
+        home_dir: /home/ansible
+        username: ansible
+        # desktop_environment: xfce
+        dotfiles_repo_url: 'https://github.com/felipempantoja/dotfiles.git'

@@ -1,0 +1,13 @@
+---
+- name: Verify XFCE Configs Existence
+  shell: 'ls {{ home_dir }}/.config/xfce4/xfconf'
+  register: xfce_configs_existence
+  changed_when: false
+  ignore_errors: yes
+
+- name: Overwrite XFCE keyboard settings
+  copy:
+    src: '.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml'
+    dest: '{{ home_dir }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml'
+    backup: yes
+    when: xfce_configs_existence.rc == 0

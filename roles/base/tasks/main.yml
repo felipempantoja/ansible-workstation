@@ -17,7 +17,7 @@
   tags:
     - base
 
-- name: Install Base packages
+- name: Install packages
   include_tasks: ../../install_packages_template.yml
   tags:
     - base

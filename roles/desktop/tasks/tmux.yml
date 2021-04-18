@@ -1,22 +1,51 @@
 ---
-- name: Install Oh My Tmux
-  get_url:
-    url: 'https://raw.githubusercontent.com/gpakosz/.tmux/master/.tmux.conf'
-    dest: '/home/{{ user_name }}'
-  tags:
-    - base
-    - tmux
+- name: Temporarily remove .tmux.conf.local as we did not remove it from dotfiles already
+  file:
+    path: '{{ home_dir }}/.tmux.conf.local'
+    state: absent
+  changed_when: false
+  ignore_errors: yes
 
-- name: Install Tmux Plugin Manager
+- name: Install Oh My Tmux
+  block:
+    - name: Download Oh My Tmux and place it in the home directory
+      git:
+        repo: 'https://github.com/gpakosz/.tmux.git'
+        dest: '{{ home_dir }}/.tmux'
+        force: yes
+
+    - name: Create a .tmux.conf Symbolic Link
+      file:
+        src: '{{ home_dir }}/.tmux/.tmux.conf'
+        dest: '{{ home_dir }}/.tmux.conf'
+        state: link
+
+    - name: Copy .tmux.conf.local to the home directory
+      copy:
+        src: '{{ home_dir }}/.tmux/.tmux.conf.local'
+        dest: '{{ home_dir }}/.tmux.conf.local'
+        remote_src: yes
+        force: no
+      changed_when: false
+
+- name: Install Tmux Plugin Manager (TPM)
   git:
     repo: 'https://github.com/tmux-plugins/tpm'
-    dest: '/home/{{ user_name }}/.tmux/plugins/tpm'
+    dest: '{{ home_dir }}/.tmux/plugins/tpm'
     force: yes
     depth: '1'
-  tags:
-    - base
-    - tmux
+#
+# remove .tmux.conf.local from dotfiles
+- name: Install Tmux Plugins via TPM
+  lineinfile:
+    path: '{{ home_dir }}/.tmux.conf.local'
+    regexp: "^set -g @plugin 'tmux-plugins/{{ item }}$"
+    insertafter: '^# visit https://github.com/tmux-plugins for available plugins$'
+    line: "set -g @plugin 'tmux-plugins/{{ item }}'"
+  loop: '{{ tmux_plugins }}'
+  changed_when: false
 
 - name: Reload Tmux configuration
-  shell: 'tmux source-file /home/{{ user_name }}/.tmux.conf'
+  shell: 'tmux source-file {{ home_dir }}/.tmux.conf'
+  changed_when: false
   ignore_errors: yes
