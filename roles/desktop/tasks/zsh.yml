@@ -11,20 +11,32 @@
     dest: '{{ home_dir }}/powerlevel10k'
     depth: '1'
 
-- name: Install Oh My Zsh Plugins
-  git:
-    repo: '{{ item }}'
-    dest: '{{ home_dir }}/.oh-my-zsh/custom/plugins/{{ item.split("/") | last }}'
-  with_items: '{{ ohmyzsh_plugins }}'
-  ignore_errors: yes
+- name: Install Oh-My-Zsh Plugins
+  block:
+    - name: Download Zsh Plugins from Git
+      git:
+        repo: '{{ item }}'
+        dest: '{{ home_dir }}/.oh-my-zsh/custom/plugins/{{ item.split("/") | last }}'
+        force: yes
+      loop: '{{ zsh_plugins }}'
 
-- name: Set Oh My Zsh Plugins Permissions
-  file:
-    path: '{{ home_dir }}/.oh-my-zsh/custom/plugins'
-    state: directory
-    recurse: yes
-    mode: '700'
-  changed_when: false
+    # remove .zshrc from dotfiles repo
+    - name: Install Downloaded Zsh Plugins using Oh-My-Zsh
+      lineinfile:
+        path: '{{ home_dir }}/.zshrc'
+        regexp: '^( *){{ item.split("/") | last }}$'
+        insertafter: '^plugins=\($'
+        line: '    {{ item.split("/") | last }}'
+      loop: '{{ zsh_plugins }}'
+      changed_when: false
+
+    - name: Set Oh My Zsh Plugins Permissions
+      file:
+        path: '{{ home_dir }}/.oh-my-zsh/custom/plugins'
+        state: directory
+        recurse: yes
+        mode: '700'
+      changed_when: false
 
 - name: Set Zsh as default shell
   user:

@@ -7,4 +7,6 @@
         name: 'dotfiles'
       vars:
         home_dir: /home/ansible
-        dotfiles_repo_url: 'https://github.com/felipempantoja/dotfiles.git'
+        dotfiles:
+          repo_url: 'https://github.com/felipempantoja/dotfiles.git'
+          current_branch: molecule

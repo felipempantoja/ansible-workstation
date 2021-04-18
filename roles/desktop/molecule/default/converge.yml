@@ -9,4 +9,6 @@
         home_dir: /home/ansible
         username: ansible
         # desktop_environment: xfce
-        dotfiles_repo_url: 'https://github.com/felipempantoja/dotfiles.git'
+        dotfiles:
+          repo_url: 'https://github.com/felipempantoja/dotfiles.git'
+          current_branch: molecule

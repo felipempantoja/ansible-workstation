@@ -34,7 +34,7 @@
     dest: '{{ home_dir }}/.tmux/plugins/tpm'
     force: yes
     depth: '1'
-#
+
 # remove .tmux.conf.local from dotfiles
 - name: Install Tmux Plugins via TPM
   lineinfile:

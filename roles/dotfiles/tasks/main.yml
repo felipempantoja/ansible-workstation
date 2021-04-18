@@ -30,10 +30,16 @@
   shell: >
     cd {{ home_dir }}
     && yadm init
-    && yadm remote add origin {{ dotfiles_repo_url }}
+    && yadm remote add origin {{ dotfiles.repo_url }}
     && yadm fetch
     && yadm branch master origin/master
     && yadm checkout master
   when: not my_face.stat.exists
+  tags:
+    - dotfiles
+
+- name: Change my Dotfiles Branch (master is default)
+  shell: 'yadm checkout -f {{ dotfiles.current_branch | default("master") }}'
+  changed_when: false
   tags:
     - dotfiles

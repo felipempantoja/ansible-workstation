@@ -2,6 +2,10 @@
 # it must be copied to the user home folder with the proper values and renamed to "ansible-local-vars.yml"
 # this one shall not be versioned!
 
+dotfiles:
+  repo_url: https://github.com/foobar/dotfiles.git
+  current_branch: other_than_master
+
 # this must be defined if you want to have an external drive configured in your fstab definition
 # otherwise, just get rid of it.
 external_drive:
